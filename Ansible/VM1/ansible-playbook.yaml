@@ -12,7 +12,8 @@
         - bind-utils
         - net-tools
         - telnet
-        - 
+        - tcpdump
+        - curl
         
         state: latest
     
