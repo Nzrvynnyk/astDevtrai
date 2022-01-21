@@ -11,7 +11,8 @@
         - tar
         - bind-utils
         - net-tools
-        
+        - telnet
+        - 
         
         state: latest
     
