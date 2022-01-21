@@ -29,7 +29,7 @@
     - name: install Docker
       yum: name=docker state=latest
 
-    - name: assicurati che docker sia attivo
+    - name: docker run
       service:
         name: docker
         state: started
