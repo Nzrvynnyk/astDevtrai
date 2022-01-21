@@ -1,4 +1,4 @@
-- hosts: aws
+- hosts: localhost
   become: true
   tasks:
     - name: install group of programs
@@ -9,13 +9,10 @@
         - mc
         - wget
         - tar
-        - ifconfig
-        - nslookup
-        - ping
-        - netstat
-        - route
-        - hosts
-        - nmap
+        - bind-utils
+        - net-tools
+        
+        
         state: latest
     
     - name: Install ansible.posix
@@ -56,3 +53,24 @@
       ansible.builtin.service:
         name: firewalld
         state: restarted
+        
+    - name: Disable Root Login
+      lineinfile:
+           dest: /etc/ssh/sshd_config
+           regexp: '^PermitRootLogin'
+           line: "PermitRootLogin no"
+           state: present
+           backup: yes
+      become: yes
+      notify:
+        - restart ssh
+  
+
+
+  handlers:
+     - name: restart ssh
+       service:
+         name: sshd
+         state: restarted
+
+
