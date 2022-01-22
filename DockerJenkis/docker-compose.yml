@@ -44,4 +44,8 @@ services:
     - jenkins-net
     volumes:
     - "./vol/jenkins/home:/var/jenkins_home"
- 
+
+volumes:
+  certs:
+  vhost.d:
+  html: 
