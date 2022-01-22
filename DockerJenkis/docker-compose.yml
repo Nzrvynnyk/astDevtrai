@@ -6,42 +6,20 @@ networks:
       name: network
 
 services:
-  nginx-proxy:
-    container_name: nginx-proxy
-    image: jwilder/nginx-proxy
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - certs:/etc/nginx/certs
-      - vhost.d:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/tmp/docker.sock:ro
 
-  nginx-proxy-letsencrypt:
-    container_name: nginx-proxy-letsencrypt
-    image: jrcs/letsencrypt-nginx-proxy-companion
-    volumes: 
-      - certs:/etc/nginx/certs
-      - vhost.d:/etc/nginx/vhost.d
-      - html:/usr/share/nginx/html
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    environment:
-      - NGINX_PROXY_CONTAINER=nginx-proxy
-   
   nginx:
-   container_name: nginx
-   image: nginx:latest
-   environment:
-    - VIRTUAL_HOST=jenkins.local
-    - LETSENCRYPT_HOST=jenkins.local
-    - LETSENCRYPT_EMAIL=vavpirchik@gmail.com
-    
+    container_name: nginx
+    image: nginx:latest
+    environment:
+      - VIRTUAL_HOST=example.com
+      - LETSENCRYPT_HOST=example.com
+      - LETSENCRYPT_EMAIL=admin@example.com
+
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
     networks:
-    - jenkins-net
+    - network
     volumes:
     - "./vol/jenkins/home:/var/jenkins_home"
 
