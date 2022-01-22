@@ -1,18 +1,41 @@
-version: "3"
+version: '3'
+
+networks:
+  default:
+    external:
+      name: network
 
 services:
-  nginx:
-    image: nginx
-    container_name: nginx
-    networks:
-    - jenkins-net
+  nginx-proxy:
+    container_name: nginx-proxy
+    image: jwilder/nginx-proxy
     ports:
-    - "80:80"
-    - "443:443"
+      - 80:80
+      - 443:443
     volumes:
-    - "./vol/nginx/default.conf:/etc/nginx/conf.d/default.conf"
-    - "./vol/nginx/ssl:/etc/nginx/ssl"
-    - "./vol/nginx/html:/usr/share/nginx/html"
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+  nginx-proxy-letsencrypt:
+    container_name: nginx-proxy-letsencrypt
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes: 
+      - certs:/etc/nginx/certs
+      - vhost.d:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      - NGINX_PROXY_CONTAINER=nginx-proxy
+   
+  nginx:
+   container_name: nginx
+   image: nginx:latest
+   environment:
+    - VIRTUAL_HOST=jenkins.local
+    - LETSENCRYPT_HOST=jenkins.local
+    - LETSENCRYPT_EMAIL=vavpirchik@gmail.com
     
   jenkins:
     image: jenkins/jenkins:lts
@@ -21,6 +44,4 @@ services:
     - jenkins-net
     volumes:
     - "./vol/jenkins/home:/var/jenkins_home"
-
-networks:
-  jenkins-net:
+ 
