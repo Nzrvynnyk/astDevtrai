@@ -1,20 +1,40 @@
+
 version: "3"
 services:
   app:
     image: nvynnyk/python-projectnzrb:2.0
-    build: ./app
+    build: 
+      context:
+        ./app
+    privileged: true    
     links:
       - db
     ports:
       - "5000:5000"
-    depends_on: 
+    networks:
+      - appnet  
+    
+    depends_on:
       - db
+
 
   db:
     image: mysql:8.0.25
+    privileged: true
     ports:
       - "30000:3306"
+    networks:
+      - appnet
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
       - ./db:/docker-entrypoint-initdb.d/:ro
+    deploy:
+      replicas: 1
+      placement:
+        constraints: [node.role == manager]
+
+
+networks:
+  appnet:
+
