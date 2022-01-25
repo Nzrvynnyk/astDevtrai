@@ -9,11 +9,20 @@ services:
     depends_on: 
       - db
 
-  db:
+  db_master:
     image: mysql:8.0.25
     ports:
       - "30000:3306"
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      - ./db:/docker-entrypoint-initdb.d/:ro
+      - ./db-master:/docker-entrypoint-initdb.d/:ro
+
+    db_slave:
+    image: mysql:8.0.25
+    ports:
+      - "30000:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+    volumes:
+      - ./db-slave:/docker-entrypoint-initdb.d/:ro    
