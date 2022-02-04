@@ -18,11 +18,3 @@ services:
     volumes:
       - ./db-master:/docker-entrypoint-initdb.d/:ro
 
-    db_slave:
-    image: mysql:8.0.25
-    ports:
-      - "30000:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-    volumes:
-      - ./db-slave:/docker-entrypoint-initdb.d/:ro    
