@@ -9,7 +9,7 @@ services:
     depends_on: 
       - db
 
-  db_master:
+  db:
     image: mysql:8.0.25
     ports:
       - "30000:3306"
