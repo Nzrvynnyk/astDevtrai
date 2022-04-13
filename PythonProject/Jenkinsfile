@@ -1,1 +1,14 @@
-
+pipeline {
+    agent { label 'master' }
+    stages {
+        stage('Build') {
+            steps {
+                sh('docker ps -a')
+                sh '''
+                    echo "Done"
+                    ls -lah
+                '''
+            }
+        }
+    }
+}
