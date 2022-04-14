@@ -1,11 +1,10 @@
  - name: Init Swarm Master
    hosts: masters
    become: true
-   gather_facts: False
    tasks:
      - name: Swarm Init
-       command: sudo usermod -aG docker user
-       command: docker swarm init --advertise-addr 192.168.1.149
+       command: usermod -aG docker user
+       command: docker swarm init --advertise-addr 192.168.56.102
 
      - name: Get Worker Token
        command: docker swarm join-token worker -q
@@ -28,5 +27,5 @@
    tasks:
      - name: Join Swarm Cluster as a Worker
        command: sudo usermod -aG docker user
-       command: docker swarm join --token {{ token }} {{ '192.168.1.149' }}:2377
+       command: docker swarm join --token {{ token }} {{ '192.168.56.102' }}:2377
        register: worker

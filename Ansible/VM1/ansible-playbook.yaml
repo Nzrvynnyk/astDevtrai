@@ -1,4 +1,5 @@
-- hosts: localhost
+- hosts: masters
+  connection: local
   become: true
   tasks:
     - name: install group of programs
