@@ -5,11 +5,5 @@
 - Docker-Compose
 
 ## Packages & Tools Used
-- Flask
-- Flask-Sqlalchemy
-- Jinja2 
-- MySQL
-- Docker
-- Docker-Compose
 
 
