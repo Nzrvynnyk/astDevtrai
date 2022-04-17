@@ -5,6 +5,7 @@ services:
   nginx:
     image: nginx
     container_name: nginx
+    restart: always
     networks:
     - jenkins-net
     ports:
@@ -18,6 +19,7 @@ services:
   jenkins:
     image: jenkinsci/blueocean
     container_name: jenkins
+    restart: always
     user: root
     networks:
     - jenkins-net
