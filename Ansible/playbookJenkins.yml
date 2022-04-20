@@ -1,0 +1,28 @@
+ - hosts: master
+   become: true
+   tasks:
+   - name: Clone a github repository
+     git:
+       repo: https://github.com/Nzrvynnyk/astDevtrain.git
+       dest: ./astDevtrain
+       clone: yes
+
+   - name: install docker compose
+     shell:
+       cmd: "yum install docker-compose -y"
+
+   - name: Run container
+     become: True
+     shell:
+       cmd: "sudo docker-compose -f ./astDevtrain/DockerJenkins/docker-compose.yml up -p Jenkins -d"
+
+  - name: Get InitialPass
+    become: True
+    shell:
+      cmd: "docker container exec jenkins sh -c "cat /var/jenkins_home/secrets/initialAdminPassword""
+    register: command_output
+  
+  - debug:
+       var: command_output.stdout_lines 
+ 
+           

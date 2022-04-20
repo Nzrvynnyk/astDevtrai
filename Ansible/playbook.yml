@@ -1,0 +1,130 @@
+- hosts: all
+  connection: local
+  become: true
+  tasks:
+    - name: install group of programs
+      yum:
+       name: "{{ package }}"
+      vars:
+	package:
+        - mc
+	- wget
+	- tar
+	- bind-utils
+        - net-tools
+        - telnet
+        - tcpdump
+        - curl
+	- git
+	state: latest
+
+    - name: Install ansible.posix
+      command: ansible-galaxy collection install ansible.posix
+
+    - name: Install Python
+      yum: name=python state=latest
+
+    - name: install pip
+      yum: name=python-pip state=latest
+
+    - name: Add Docker repo
+      get_url:
+	url: https://download.docker.com/linux/centos/docker-ce.repo
+        dest: /etc/yum.repos.d/docer-ce.repo
+      become: yes
+
+    - name: Enable Docker Edge repo
+      ini_file:
+        dest: /etc/yum.repos.d/docer-ce.repo
+        section: 'docker-ce-edge'
+        option: enabled
+        value: 0
+      become: yes
+
+    - name: Enable Docker Test repo
+      ini_file:
+        dest: /etc/yum.repos.d/docer-ce.repo
+        section: 'docker-ce-test'
+        option: enabled
+        value: 0
+      become: yes
+   
+   - name: Install Docker
+      package:
+	    name: docker-ce
+	    state: latest
+      become: yes
+
+    - name: Start Docker service
+      service:
+        name: docker
+        state: started
+        enabled: yes
+      become: yes
+
+    - name: Add user user to docker group
+      user:
+        name: user
+        groups: docker
+        append: yes
+      become: yes
+
+    - name: open 80 port
+      ansible.posix.firewalld:
+        service: http
+        permanent: yes
+        state: enabled
+
+    - name: open 443 port
+      ansible.posix.firewalld:
+        service: https
+        permanent: yes
+        state: enabled
+
+    - name: open 22 tcp port
+      ansible.posix.firewalld:
+        port: 22/tcp
+        permanent: yes
+        state: enabled
+
+    - name: open 2376-2377 tcp port
+      ansible.posix.firewalld:
+        port: 2376-2377/tcp
+        permanent: yes
+        state: enabled
+
+    - name: open 7946 tcp port
+      ansible.posix.firewalld:
+        port: 7946/tcp
+        permanent: yes
+        state: enabled
+
+    - name: open 7946 udp port
+      ansible.posix.firewalld:
+        port: 7946/udp
+        permanent: yes
+        state: enabled
+
+    - name: open 4789 tcp port
+      ansible.posix.firewalld:
+        port: 4789/udp
+        permanent: yes
+        state: enabled
+
+
+
+    - name: restart service firewalld
+      ansible.builtin.service:
+        name: firewalld
+        state: restarted
+
+    - name: Disable Root Login
+      lineinfile:
+           dest: /etc/ssh/sshd_config
+           regexp: '^PermitRootLogin'
+           line: "PermitRootLogin no"
+           state: present
+           backup: yes        
+
+
+
