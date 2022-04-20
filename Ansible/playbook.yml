@@ -49,7 +49,7 @@
         value: 0
       become: yes
    
-   - name: Install Docker
+    - name: Install Docker
       package:
         name: docker-ce
         state: latest
