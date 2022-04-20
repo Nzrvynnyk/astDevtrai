@@ -1,1 +1,0 @@
-write palybook to setup centos 7. install tools, add docker to task 5. restricted 22 port for root for user allowed. 
