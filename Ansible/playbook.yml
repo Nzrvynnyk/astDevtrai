@@ -6,18 +6,18 @@
       yum:
        name: "{{ package }}"
       vars:
-	package:
+       package:
         - mc
-	- wget
-	- tar
-	- bind-utils
+        - wget
+        - tar
+        - bind-utils
         - net-tools
         - telnet
         - tcpdump
         - curl
-	- git
-	state: latest
-
+        - git
+       state: latest
+       
     - name: Install ansible.posix
       command: ansible-galaxy collection install ansible.posix
 
